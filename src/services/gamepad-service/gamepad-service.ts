@@ -1,4 +1,4 @@
-import { GamepadsSubscriber, IGamepadService } from '../../typings'
+import { GamepadsSubscriber, IGamepadService } from "."
 
 export class GamepadService implements IGamepadService {
   private activeGamepads: Gamepad[] = []
@@ -8,34 +8,38 @@ export class GamepadService implements IGamepadService {
     this.subscriptions = this.subscriptions.filter((_el, i) => i !== index)
   }
 
-  constructor() {
-    window.addEventListener('gamepadconnected', (event) => {
-      const { gamepad } = event as GamepadEvent
+  public init(): GamepadService{
+    if (!this.animationFrameId) {
+      window.addEventListener('gamepadconnected', (event) => {
+        const { gamepad } = event as GamepadEvent
 
-      const pollGamepads = () => {
-        for (const subscription of this.subscriptions) {
-          subscription(navigator.getGamepads())
+        const pollGamepads = () => {
+          for (const subscription of this.subscriptions) {
+            subscription(navigator.getGamepads())
+          }
+
+          this.animationFrameId = window.requestAnimationFrame(pollGamepads)
         }
 
-        this.animationFrameId = window.requestAnimationFrame(pollGamepads)
-      }
+        this.activeGamepads = [...this.activeGamepads, gamepad]
 
-      this.activeGamepads = [...this.activeGamepads, gamepad]
+        if (!this.animationFrameId) pollGamepads()
+      })
 
-      if (!this.animationFrameId) pollGamepads()
-    })
+      window.addEventListener('gamepaddisconnected', (event) => {
+        const { gamepad } = event as GamepadEvent
 
-    window.addEventListener('gamepaddisconnected', (event) => {
-      const { gamepad } = event as GamepadEvent
+        this.activeGamepads = this.activeGamepads.filter(
+          ({ index }) => index !== gamepad.index
+        )
 
-      this.activeGamepads = this.activeGamepads.filter(
-        ({ index }) => index !== gamepad.index
-      )
+        if (this.animationFrameId && this.activeGamepads.length === 0) {
+          window.cancelAnimationFrame(this.animationFrameId)
+        }
+      })
+    }
 
-      if (this.animationFrameId && this.activeGamepads.length === 0) {
-        window.cancelAnimationFrame(this.animationFrameId)
-      }
-    })
+    return this
   }
 
   public subscribe(subscriber: GamepadsSubscriber) {

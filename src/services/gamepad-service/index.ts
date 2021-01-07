@@ -1,5 +1,12 @@
-import { GamepadService as Service } from './gamepad-service'
+import { GamepadList } from '../..';
+import { GamepadService } from './gamepad-service'
 
-const GamepadService = new Service()
+type SubscriptionCanceller = { cancel: () => void }
+export type GamepadsSubscriber = (gamepads: GamepadList) => void
 
-export default GamepadService
+export interface IGamepadService {
+  init(): void;
+  subscribe(subscriber: GamepadsSubscriber): SubscriptionCanceller;
+}
+
+export default new GamepadService();

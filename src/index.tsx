@@ -1,16 +1,16 @@
-import * as React from 'react'
 import GamepadProvider from './providers/gamepad-provider'
-import styles from './styles.module.css'
+import GamepadService from './services/gamepad-service/index';
+import { takeGamepad, mapGamepadButtons, takeButtons } from './utils/providers/gamepad';
 
-export const ExampleComponent = () => {
-  return (
-    <React.Fragment>
-      <GamepadProvider gamepad_index={0}>
-        {({ gamepad }) => <div className={styles.test}>{gamepad?.id}</div>}
-      </GamepadProvider>
-      <GamepadProvider gamepad_index={1}>
-        {({ gamepad }) => <div className={styles.test}>{gamepad?.id}</div>}
-      </GamepadProvider>
-    </React.Fragment>
-  )
+export type GamepadIndex = 0 | 1 | 2 | 3
+export type GamepadList = (Gamepad | null)[]
+export type GamepadButtons = {
+  mapping: GamepadMappingType;
+  buttons: GamepadButton[];
 }
+export type MappedGamepadButtons = (GamepadButton & {
+  name: string;
+  index: number;
+})[]
+
+export { GamepadService, GamepadProvider, takeGamepad, takeButtons, mapGamepadButtons };

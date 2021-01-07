@@ -8,10 +8,10 @@ export const GamepadProvider: ProviderComponent<
   GamepadProviderProps,
   ProvidedGamepad
 > = ({ gamepad_index, children }) => {
-  const [gamepad, setGamepad] = useState<Gamepad>()
+  const [gamepad, setGamepad] = useState<Gamepad | null>(null)
 
   useEffect(() => {
-    GamepadService.subscribe((gamepads) => {
+    GamepadService.init().subscribe((gamepads) => {
       setGamepad(takeGamepad(gamepad_index, gamepads))
     })
   }, [])
