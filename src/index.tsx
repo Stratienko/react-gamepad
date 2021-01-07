@@ -1,10 +1,16 @@
 import * as React from 'react'
+import GamepadProvider from './providers/gamepad-provider'
 import styles from './styles.module.css'
 
-interface Props {
-  text: string
-}
-
-export const ExampleComponent = ({ text }: Props) => {
-  return <div className={styles.test}>Example Component: {text}</div>
+export const ExampleComponent = () => {
+  return (
+    <React.Fragment>
+      <GamepadProvider gamepad_index={0}>
+        {({ gamepad }) => <div className={styles.test}>{gamepad?.id}</div>}
+      </GamepadProvider>
+      <GamepadProvider gamepad_index={1}>
+        {({ gamepad }) => <div className={styles.test}>{gamepad?.id}</div>}
+      </GamepadProvider>
+    </React.Fragment>
+  )
 }
