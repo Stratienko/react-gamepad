@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { GamepadButtons, GamepadIndex , GamepadAxes } from '..';
 import GamepadService from '../services/gamepad-service';
-import { takeGamepad, takeButtons } from '../utils/gamepad';
-import { takeGamepadAxes } from './../utils/gamepad';
+import { takeGamepad, takeButtons , takeGamepadAxes } from '../utils/gamepad';
 
 /**
  * Subscribes to the gamepad changes

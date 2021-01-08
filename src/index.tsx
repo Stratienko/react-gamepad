@@ -1,5 +1,5 @@
-import GamepadProvider from './providers/gamepad-provider'
-import GamepadService from './services/gamepad-service/index';
+import GamepadProvider from './providers/gamepad-provider';
+import GamepadService from './services/gamepad-service';
 import { takeGamepad, mapGamepadButtons, takeButtons } from './utils/gamepad';
 import { useGamepad, useGamepadButtons, useGamepadAxes } from './hooks/gamepad';
 
