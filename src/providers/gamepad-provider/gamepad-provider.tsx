@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { GamepadProviderProps, ProvidedGamepad } from '.'
 import { ProviderComponent } from '../types'
 import GamepadService from './../../services/gamepad-service/index'
-import { takeGamepad } from './../../utils/providers/gamepad'
+import { takeGamepad } from '../../utils/gamepad'
 
 export const GamepadProvider: ProviderComponent<
   GamepadProviderProps,

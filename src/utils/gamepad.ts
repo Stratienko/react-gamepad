@@ -1,5 +1,11 @@
-import { GamepadIndex, GamepadList, GamepadButtons, MappedGamepadButtons } from "../.."
-import GAMEPAD_BUTTON_MAPPINGS from "../../mappings"
+import {
+  GamepadIndex,
+  GamepadList,
+  GamepadButtons,
+  MappedGamepadButtons,
+  GamepadAxes
+} from ".."
+import GAMEPAD_BUTTON_MAPPINGS from "../mappings"
 
 /**
  * Transforms iterable to array
@@ -63,4 +69,26 @@ export function mapGamepadButtons({
       name: GAMEPAD_BUTTON_MAPPINGS[mapping][index]
     }
   })
+}
+
+/**
+ *
+ * @param {Gamepad}gamepad - Gamepad object
+ * @param {number}accuracy - number of digits after the decimal point
+ * @returns {GamepadAxes}gamepad axes
+ */
+export function takeGamepadAxes(gamepad: Gamepad, accuracy?: number): GamepadAxes {
+  return toRegularArray(gamepad.axes).reduce((acc: GamepadAxes, curr, i) => {
+    const directions = {
+      0: 'lx',
+      1: 'ly',
+      2: 'rx',
+      3: 'ry'
+    }
+
+    return {
+      ...acc,
+      [directions[i]]: Number(curr.toFixed(accuracy))
+    }
+  }, {} as GamepadAxes);
 }
