@@ -35,6 +35,8 @@ export class GamepadService implements IGamepadService {
 
         if (this.animationFrameId && this.activeGamepads.length === 0) {
           window.cancelAnimationFrame(this.animationFrameId)
+
+          this.animationFrameId = null;
         }
       })
     }
