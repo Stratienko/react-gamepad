@@ -41,14 +41,18 @@ export function takeGamepad(
 /**
  * Returns gamepad buttons array and gamepad mapping
  * @param {Gamepad}gamepad - Gamepad object
+ * @param {number}accuracy - number of digits after the decimal point
  * @return {GamepadButtons}gamepad buttons and mapping
  */
-export function takeButtons({
-  buttons, mapping
-}: Gamepad): GamepadButtons {
+export function takeButtons(gamepad: Gamepad, accuracy?: number): GamepadButtons {
+  const {buttons, mapping} = gamepad;
+
   return {
     mapping,
-    buttons: toRegularArray(buttons),
+    buttons: toRegularArray(buttons).map((btn) => ({
+      ...btn,
+      value: Number(btn.value.toFixed(accuracy))
+    })),
   }
 }
 

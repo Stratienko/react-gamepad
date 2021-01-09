@@ -12,7 +12,13 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
   const [gamepad, setGamepad] = useState<Gamepad | null>(null);
 
   useEffect(() => {
-    GamepadService.init().subscribe((gamepads) => setGamepad(takeGamepad(index, gamepads)))
+    GamepadService.init().subscribe((gamepads) => {
+      const nextGp = takeGamepad(index, gamepads);
+
+      if (nextGp && (!gamepad || gamepad.timestamp !== nextGp.timestamp)) {
+        setGamepad(nextGp)
+      }
+    })
   }, [])
 
   return gamepad;
@@ -23,13 +29,15 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
  * @param {GamepadIndex}index - gamepad index
  * @return {GamepadButtons | undefined}gamepad's buttons if present
  */
-export function useGamepadButtons(index: GamepadIndex): GamepadButtons | undefined {
+export function useGamepadButtons(index: GamepadIndex, accuracy?: number): GamepadButtons | undefined {
   const gamepad = useGamepad(index);
   const [buttons, setButtons] = useState<GamepadButtons>();
 
   useEffect(() => {
     if (gamepad) {
-      setButtons(takeButtons(gamepad));
+      const nextButtons = takeButtons(gamepad, accuracy)
+
+      setButtons(nextButtons);
     }
   }, [gamepad])
 
