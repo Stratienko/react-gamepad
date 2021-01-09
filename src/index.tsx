@@ -3,7 +3,7 @@ import GamepadService from './services/gamepad-service';
 import {
   takeGamepad,
   mapGamepadButtons,
-  takeButtons,
+  takeGamepadButtons,
   takeGamepadAxes,
 } from './utils/gamepad';
 import { useGamepad, useGamepadButtons, useGamepadAxes } from './hooks/gamepad';
@@ -26,7 +26,7 @@ export {
   GamepadService,
   GamepadProvider,
   takeGamepad,
-  takeButtons,
+  takeGamepadButtons,
   takeGamepadAxes,
   mapGamepadButtons,
   useGamepad,

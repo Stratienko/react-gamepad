@@ -3,9 +3,9 @@ import {
   GamepadList,
   GamepadButtons,
   MappedGamepadButtons,
-  GamepadAxes
-} from ".."
-import GAMEPAD_BUTTON_MAPPINGS from "../mappings"
+  GamepadAxes,
+} from '..';
+import GAMEPAD_BUTTON_MAPPINGS from '../mappings';
 
 /**
  * Transforms iterable to array
@@ -13,13 +13,13 @@ import GAMEPAD_BUTTON_MAPPINGS from "../mappings"
  * @returns {Array}array
  */
 function toRegularArray<T>(target: Iterable<T>): Array<T> {
-  const resultArray: T[] = []
+  const resultArray: T[] = [];
 
   for (const el of target) {
-    resultArray.push(el)
+    resultArray.push(el);
   }
 
-  return resultArray
+  return resultArray;
 }
 
 /**
@@ -30,13 +30,13 @@ function toRegularArray<T>(target: Iterable<T>): Array<T> {
  */
 export function takeGamepad(
   index: GamepadIndex,
-  gamepads: GamepadList
+  gamepads: GamepadList,
 ): Gamepad | null {
   const gp = toRegularArray(gamepads).filter(
-    (gamepad) => gamepad && gamepad.index === index
-  )[0]
+    (gamepad) => gamepad && gamepad.index === index,
+  )[0];
 
-  return gp
+  return gp;
 }
 /**
  * Returns gamepad buttons array and gamepad mapping
@@ -44,16 +44,19 @@ export function takeGamepad(
  * @param {number}accuracy - number of digits after the decimal point
  * @return {GamepadButtons}gamepad buttons and mapping
  */
-export function takeButtons(gamepad: Gamepad, accuracy?: number): GamepadButtons {
-  const {buttons, mapping} = gamepad;
+export function takeGamepadButtons(
+  gamepad: Gamepad,
+  accuracy?: number,
+): GamepadButtons {
+  const { buttons, mapping } = gamepad;
 
   return {
     mapping,
     buttons: toRegularArray(buttons).map((btn) => ({
       ...btn,
-      value: Number(btn.value.toFixed(accuracy))
+      value: Number(btn.value.toFixed(accuracy)),
     })),
-  }
+  };
 }
 
 /**
@@ -62,17 +65,18 @@ export function takeButtons(gamepad: Gamepad, accuracy?: number): GamepadButtons
  * @return {MappedGamepadButtons}mapped buttons
  */
 export function mapGamepadButtons({
-  mapping, buttons
+  mapping,
+  buttons,
 }: GamepadButtons): MappedGamepadButtons {
-  return buttons.map(({value, pressed, touched}, index) => {
+  return buttons.map(({ value, pressed, touched }, index) => {
     return {
       value,
       pressed,
       touched,
       index,
-      name: GAMEPAD_BUTTON_MAPPINGS[mapping][index]
-    }
-  })
+      name: GAMEPAD_BUTTON_MAPPINGS[mapping][index],
+    };
+  });
 }
 
 /**
@@ -81,18 +85,21 @@ export function mapGamepadButtons({
  * @param {number}accuracy - number of digits after the decimal point
  * @returns {GamepadAxes}gamepad axes
  */
-export function takeGamepadAxes(gamepad: Gamepad, accuracy?: number): GamepadAxes {
+export function takeGamepadAxes(
+  gamepad: Gamepad,
+  accuracy?: number,
+): GamepadAxes {
   return toRegularArray(gamepad.axes).reduce((acc: GamepadAxes, curr, i) => {
     const directions = {
       0: 'lx',
       1: 'ly',
       2: 'rx',
-      3: 'ry'
-    }
+      3: 'ry',
+    };
 
     return {
       ...acc,
-      [directions[i]]: Number(curr.toFixed(accuracy))
-    }
+      [directions[i]]: Number(curr.toFixed(accuracy)),
+    };
   }, {} as GamepadAxes);
 }

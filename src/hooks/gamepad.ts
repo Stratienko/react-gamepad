@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
-import { GamepadButtons, GamepadIndex , GamepadAxes } from '..';
+import { GamepadButtons, GamepadIndex, GamepadAxes } from '..';
 import GamepadService from '../services/gamepad-service';
-import { takeGamepad, takeButtons , takeGamepadAxes } from '../utils/gamepad';
+import {
+  takeGamepad,
+  takeGamepadButtons,
+  takeGamepadAxes,
+} from '../utils/gamepad';
 
 /**
  * Subscribes to the gamepad changes
@@ -16,10 +20,10 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
       const nextGp = takeGamepad(index, gamepads);
 
       if (nextGp && (!gamepad || gamepad.timestamp !== nextGp.timestamp)) {
-        setGamepad(nextGp)
+        setGamepad(nextGp);
       }
-    })
-  }, [])
+    });
+  }, []);
 
   return gamepad;
 }
@@ -29,19 +33,22 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
  * @param {GamepadIndex}index - gamepad index
  * @return {GamepadButtons | undefined}gamepad's buttons if present
  */
-export function useGamepadButtons(index: GamepadIndex, accuracy?: number): GamepadButtons | undefined {
+export function useGamepadButtons(
+  index: GamepadIndex,
+  accuracy?: number,
+): GamepadButtons | undefined {
   const gamepad = useGamepad(index);
   const [buttons, setButtons] = useState<GamepadButtons>();
 
   useEffect(() => {
     if (gamepad) {
-      const nextButtons = takeButtons(gamepad, accuracy)
+      const nextButtons = takeGamepadButtons(gamepad, accuracy);
 
       setButtons(nextButtons);
     }
-  }, [gamepad])
+  }, [gamepad]);
 
-  return buttons
+  return buttons;
 }
 
 /**
@@ -50,7 +57,10 @@ export function useGamepadButtons(index: GamepadIndex, accuracy?: number): Gamep
  * @param {number}accuracy - number of digits after the decimal point
  * @return {GamepadAxes | undefined}gamepad's axes if present
  */
-export function useGamepadAxes(index: GamepadIndex, accuracy?: number): GamepadAxes | undefined {
+export function useGamepadAxes(
+  index: GamepadIndex,
+  accuracy?: number,
+): GamepadAxes | undefined {
   const gamepad = useGamepad(index);
   const [axes, setAxes] = useState<GamepadAxes>();
 
@@ -58,9 +68,9 @@ export function useGamepadAxes(index: GamepadIndex, accuracy?: number): GamepadA
     if (gamepad) {
       const nextAxes = takeGamepadAxes(gamepad, accuracy);
 
-      setAxes(nextAxes)
+      setAxes(nextAxes);
     }
-  }, [gamepad])
+  }, [gamepad]);
 
-  return axes
+  return axes;
 }
