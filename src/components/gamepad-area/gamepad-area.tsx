@@ -15,26 +15,22 @@ export const GamepadArea: React.FC = ({ children }) => {
     focusableItems: [],
   });
 
+  const { focused, focusableItems } = state;
+  const prev = () => (focused === 0 ? focused : focused - 1);
+  const next = () =>
+    focused === focusableItems[focusableItems.length - 1]
+      ? focused
+      : focused + 1;
+
   useGamepadButtonEvents({
     gamepadIndex: 0,
     accuracy: 1,
-    LEFT: () => moveFocus('prev'),
-    RIGHT: () => moveFocus('next'),
+    LEFT: () => moveFocus(prev()),
+    RIGHT: () => moveFocus(next()),
   });
 
-  const moveFocus = (direction: 'prev' | 'next'): void => {
-    const { focused, focusableItems } = state;
-    const isFirstElement = focused === 0;
-    const isLastElement = focused === focusableItems[focusableItems.length - 1];
-
-    switch (direction) {
-      case 'prev':
-        !isFirstElement && setState({ focusableItems, focused: focused - 1 });
-        break;
-      default:
-        !isLastElement && setState({ focusableItems, focused: focused + 1 });
-    }
-  };
+  const moveFocus = (focused: number): void =>
+    setState({ focusableItems, focused });
 
   const addFocusableItem = (gamepadIndex: number): void => {
     const { focused, focusableItems } = state;
