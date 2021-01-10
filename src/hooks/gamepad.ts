@@ -35,7 +35,7 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
  */
 export function useGamepadButtons(
   index: GamepadIndex,
-  accuracy?: number,
+  accuracy?: number
 ): GamepadButtons | undefined {
   const gamepad = useGamepad(index);
   const [buttons, setButtons] = useState<GamepadButtons>();
@@ -59,7 +59,7 @@ export function useGamepadButtons(
  */
 export function useGamepadAxes(
   index: GamepadIndex,
-  accuracy?: number,
+  accuracy?: number
 ): GamepadAxes | undefined {
   const gamepad = useGamepad(index);
   const [axes, setAxes] = useState<GamepadAxes>();

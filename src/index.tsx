@@ -7,17 +7,19 @@ import {
   takeGamepadAxes,
 } from './utils/gamepad';
 import { useGamepad, useGamepadButtons, useGamepadAxes } from './hooks/gamepad';
+import GamepadArea from './components/gamepad-area';
+import FocusableItem from './components/focusable-item';
 
-export type GamepadIndex = 0 | 1 | 2 | 3
-export type GamepadList = (Gamepad | null)[]
+export type GamepadIndex = 0 | 1 | 2 | 3;
+export type GamepadList = (Gamepad | null)[];
 export type GamepadButtons = {
   mapping: GamepadMappingType;
   buttons: GamepadButton[];
-}
+};
 export type MappedGamepadButtons = (GamepadButton & {
   name: string;
   index: number;
-})[]
+})[];
 export type GamepadAxes = {
   [key in 'lx' | 'ly' | 'rx' | 'ry']: number;
 };
@@ -32,4 +34,6 @@ export {
   useGamepad,
   useGamepadButtons,
   useGamepadAxes,
+  GamepadArea,
+  FocusableItem,
 };
