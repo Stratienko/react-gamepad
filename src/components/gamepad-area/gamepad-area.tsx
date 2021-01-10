@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FocusedElementsContext, {
   TFocusedElementsContext,
 } from '../../context/focused-elements';
-import { useGamepadButtonEvents } from '../../hooks/gamepad';
+import { useGamepadButtons } from '../../hooks/gamepad';
 
 type GamepadAreaState = Omit<
   TFocusedElementsContext,
@@ -16,15 +16,15 @@ export const GamepadArea: React.FC = ({ children }) => {
   });
 
   const { focused, focusableItems } = state;
-  const prev = () => (focused === 0 ? focused : focused - 1);
+  const prev = () =>
+    focusableItems.length > 0 && focused === 0 ? focused : focused - 1;
   const next = () =>
+    focusableItems.length > 0 &&
     focused === focusableItems[focusableItems.length - 1]
       ? focused
       : focused + 1;
 
-  useGamepadButtonEvents({
-    gamepadIndex: 0,
-    accuracy: 1,
+  useGamepadButtons(0, 1, {
     LEFT: () => moveFocus(prev()),
     RIGHT: () => moveFocus(next()),
   });

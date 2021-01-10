@@ -37,14 +37,18 @@ export function useGamepad(index: GamepadIndex): Gamepad | null {
 /**
  * Subscribes to the gamepad's buttons values
  * @param {GamepadIndex}index - gamepad index
+ * @param {number}accuracy - number of digits after the decimal point
+ * @param {GamepadButtonEvents}events - gamepad button event handlers
  * @return {GamepadButtons | undefined}gamepad's buttons if present
  */
 export function useGamepadButtons(
   index: GamepadIndex,
   accuracy?: number,
+  events?: GamepadButtonEvents,
 ): GamepadButtons | undefined {
   const gamepad = useGamepad(index);
   const [buttons, setButtons] = useState<GamepadButtons>();
+  const providedEvents = Object.keys(events || {});
 
   useEffect(() => {
     if (gamepad) {
@@ -55,6 +59,28 @@ export function useGamepadButtons(
       }
     }
   }, [gamepad]);
+
+  useEffect(() => {
+    if (buttons && events) {
+      const mapped = mapGamepadButtons(buttons);
+
+      providedEvents.forEach((buttonName) => {
+        if (events[buttonName]) {
+          const eventButton = mapped.find(({ name }) => buttonName === name);
+
+          if (eventButton && eventButton.value !== 0) {
+            const event = events[buttonName] as (button: GamepadButton) => void;
+
+            event({
+              value: eventButton.value,
+              pressed: eventButton.pressed,
+              touched: eventButton.touched,
+            });
+          }
+        }
+      });
+    }
+  }, [buttons]);
 
   return buttons;
 }
@@ -83,39 +109,4 @@ export function useGamepadAxes(
   }, [gamepad]);
 
   return axes;
-}
-
-/**
- * Subscribes to gamepad's buttons and fires events on change
- * @param {GamepadButtonEvents}arguments - gamepad index, acuuracy and event handlers
- */
-export function useGamepadButtonEvents({
-  gamepadIndex,
-  accuracy,
-  ...events
-}: GamepadButtonEvents): void {
-  const buttons = useGamepadButtons(gamepadIndex, accuracy);
-  const currentEvents = Object.keys(events);
-
-  useEffect(() => {
-    if (buttons) {
-      const mapped = mapGamepadButtons(buttons);
-
-      currentEvents.forEach((buttonName) => {
-        if (events[buttonName]) {
-          const eventButton = mapped.find(({ name }) => buttonName === name);
-
-          if (eventButton && eventButton.value !== 0) {
-            const event = events[buttonName] as (button: GamepadButton) => void;
-
-            event({
-              value: eventButton.value,
-              pressed: eventButton.pressed,
-              touched: eventButton.touched,
-            });
-          }
-        }
-      });
-    }
-  }, [buttons]);
 }
