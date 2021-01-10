@@ -1,10 +1,16 @@
 import { useState, useEffect } from 'react';
-import { GamepadButtons, GamepadIndex, GamepadAxes } from '..';
+import {
+  GamepadButtons,
+  GamepadIndex,
+  GamepadAxes,
+  GamepadButtonEvents,
+} from '..';
 import GamepadService from '../services/gamepad-service';
 import {
   takeGamepad,
   takeGamepadButtons,
   takeGamepadAxes,
+  mapGamepadButtons,
 } from '../utils/gamepad';
 
 /**
@@ -44,7 +50,9 @@ export function useGamepadButtons(
     if (gamepad) {
       const nextButtons = takeGamepadButtons(gamepad, accuracy);
 
-      setButtons(nextButtons);
+      if (JSON.stringify(buttons) !== JSON.stringify(nextButtons)) {
+        setButtons(nextButtons);
+      }
     }
   }, [gamepad]);
 
@@ -68,9 +76,46 @@ export function useGamepadAxes(
     if (gamepad) {
       const nextAxes = takeGamepadAxes(gamepad, accuracy);
 
-      setAxes(nextAxes);
+      if (JSON.stringify(axes) !== JSON.stringify(nextAxes)) {
+        setAxes(nextAxes);
+      }
     }
   }, [gamepad]);
 
   return axes;
+}
+
+/**
+ * Subscribes to gamepad's buttons and fires events on change
+ * @param {GamepadButtonEvents}arguments - gamepad index, acuuracy and event handlers
+ */
+export function useGamepadButtonEvents({
+  gamepadIndex,
+  accuracy,
+  ...events
+}: GamepadButtonEvents): void {
+  const buttons = useGamepadButtons(gamepadIndex, accuracy);
+  const currentEvents = Object.keys(events);
+
+  useEffect(() => {
+    if (buttons) {
+      const mapped = mapGamepadButtons(buttons);
+
+      currentEvents.forEach((buttonName) => {
+        if (events[buttonName]) {
+          const eventButton = mapped.find(({ name }) => buttonName === name);
+
+          if (eventButton && eventButton.value !== 0) {
+            const event = events[buttonName] as (button: GamepadButton) => void;
+
+            event({
+              value: eventButton.value,
+              pressed: eventButton.pressed,
+              touched: eventButton.touched,
+            });
+          }
+        }
+      });
+    }
+  }, [buttons]);
 }

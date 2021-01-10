@@ -6,10 +6,39 @@ import {
   takeGamepadButtons,
   takeGamepadAxes,
 } from './utils/gamepad';
-import { useGamepad, useGamepadButtons, useGamepadAxes } from './hooks/gamepad';
+import {
+  useGamepad,
+  useGamepadButtons,
+  useGamepadAxes,
+  useGamepadButtonEvents,
+} from './hooks/gamepad';
 import GamepadArea from './components/gamepad-area';
-import FocusableItem from './components/focusable-item';
+import GamepadFocusProvider from './providers/gamepad-focus-provider/index';
 
+export type ButtonNames =
+  | 'A'
+  | 'B'
+  | 'X'
+  | 'Y'
+  | 'LB'
+  | 'RB'
+  | 'LT'
+  | 'RT'
+  | 'VIEW'
+  | 'MENU'
+  | 'LS'
+  | 'RS'
+  | 'UP'
+  | 'DOWN'
+  | 'LEFT'
+  | 'RIGHT'
+  | 'XBOX';
+export type GamepadButtonEvents = {
+  [key in ButtonNames]?: (button: GamepadButton) => void;
+} & {
+  gamepadIndex: GamepadIndex;
+  accuracy?: number;
+};
 export type GamepadIndex = 0 | 1 | 2 | 3;
 export type GamepadList = (Gamepad | null)[];
 export type GamepadButtons = {
@@ -34,6 +63,7 @@ export {
   useGamepad,
   useGamepadButtons,
   useGamepadAxes,
+  useGamepadButtonEvents,
   GamepadArea,
-  FocusableItem,
+  GamepadFocusProvider,
 };
